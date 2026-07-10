@@ -22,10 +22,17 @@
                 <td>{{ p.get_estado_display }}</td>
                 <td>
                     {% if p.estado != 'devuelto' %}
-                    <form action="{% url 'prestamos:devolver' p.id %}" method="post">
+                    <form action="{% url 'prestamos:devolver' p.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit">Marcar como Devuelto</button>
+                        <button type="submit">Devuelto (Enviar Confirmación)</button>
                     </form>
+                    
+                    {% if p.estado == 'activo' %}
+                    <form action="{% url 'prestamos:marcar_atraso' p.id %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" style="background-color:red; color:white;">Sancionar (Notificar)</button>
+                    </form>
+                    {% endif %}
                     {% else %}
                         Entregado el {{ p.fecha_devolucion_real }}
                     {% endif %}

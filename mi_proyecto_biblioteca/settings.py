@@ -132,9 +132,13 @@ import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Autenticación y correo (Fase 1)
-LOGIN_URL = 'usuarios:login'
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ----------------- FASE 4: CONFIGURACIÓN DE CORREOS -----------------
+# Usamos la consola para imprimir los correos en desarrollo sin requerir SMTP real aún.
+# Para producción, se cambiaría a 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'biblioteca@utp.edu.pe'
 LOGIN_REDIRECT_URL = 'usuarios:lista'
 LOGOUT_REDIRECT_URL = 'usuarios:login'
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -8,4 +8,5 @@ urlpatterns = [
     path('mis-prestamos/', views.MisPrestamosView.as_view(), name='mis_prestamos'),
     path('gestion/', views.GestionPrestamosView.as_view(), name='gestion'),
     path('devolver/<int:prestamo_id>/', views.devolver_prestamo, name='devolver'),
+    path('atraso/<int:prestamo_id>/', views.marcar_atraso, name='marcar_atraso'),
 ]
