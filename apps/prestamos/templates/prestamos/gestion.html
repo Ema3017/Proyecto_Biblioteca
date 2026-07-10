@@ -1,0 +1,41 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <h2>Gestión de Préstamos (Bibliotecario)</h2>
+    
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Libro</th>
+                <th>Fecha Préstamo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in prestamos %}
+            <tr>
+                <td>{{ p.usuario.username }} ({{ p.usuario.get_rol_display }})</td>
+                <td>{{ p.libro.titulo }}</td>
+                <td>{{ p.fecha_prestamo }}</td>
+                <td>{{ p.get_estado_display }}</td>
+                <td>
+                    {% if p.estado != 'devuelto' %}
+                    <form action="{% url 'prestamos:devolver' p.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Marcar como Devuelto</button>
+                    </form>
+                    {% else %}
+                        Entregado el {{ p.fecha_devolucion_real }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No hay préstamos registrados en el sistema.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

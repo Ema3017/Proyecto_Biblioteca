@@ -1,0 +1,38 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <h2>Mis Préstamos</h2>
+    
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Libro</th>
+                <th>Fecha de Préstamo</th>
+                <th>Fecha Límite</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in prestamos %}
+            <tr>
+                <td>{{ p.libro.titulo }}</td>
+                <td>{{ p.fecha_prestamo }}</td>
+                <td>{{ p.fecha_devolucion_esperada }}</td>
+                <td>
+                    {% if p.estado == 'atrasado' %}
+                        <span style="color:red; font-weight:bold;">Atrasado (MULTA)</span>
+                    {% elif p.estado == 'devuelto' %}
+                        <span style="color:green;">Devuelto</span>
+                    {% else %}
+                        <span style="color:blue;">Activo</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4">No tienes libros prestados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

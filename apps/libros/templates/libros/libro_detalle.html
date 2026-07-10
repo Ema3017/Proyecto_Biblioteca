@@ -18,10 +18,25 @@
             <p><strong>Grado:</strong> {{ libro.get_grado_objetivo_display }}</p>
             <p><strong>Ejemplares Disponibles:</strong> {{ libro.ejemplares_disponibles }}</p>
             
-            <!-- Integración con Prolog vendrá aquí en la Fase 3 -->
+            <!-- Integración con Prolog (Fase 3) -->
             {% if user.rol == 'estudiante' or user.rol == 'docente' %}
-                <button disabled>Solicitar Préstamo (Fase 3)</button>
+                <form action="{% url 'prestamos:solicitar' libro.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" {% if libro.ejemplares_disponibles <= 0 %}disabled{% endif %}>
+                        Solicitar Préstamo (Evaluado por IA)
+                    </button>
+                </form>
             {% endif %}
+            
+            <hr>
+            <h4>Recomendados por IA</h4>
+            <ul>
+                {% for rec in recomendados %}
+                    <li><a href="{% url 'libros:detalle' rec.id %}">{{ rec.titulo }}</a></li>
+                {% empty %}
+                    <li>No hay recomendaciones en este momento.</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
     

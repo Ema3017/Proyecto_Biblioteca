@@ -11,8 +11,12 @@
             {% if user.is_authenticated %}
                 <span>Bienvenido, {{ user.username }} ({{ user.get_rol_display }})</span>
                 | <a href="{% url 'libros:catalogo' %}">Catálogo de Libros</a>
+                {% if user.rol == 'estudiante' or user.rol == 'docente' %}
+                    | <a href="{% url 'prestamos:mis_prestamos' %}">Mis Préstamos</a>
+                {% endif %}
                 {% if user.rol == 'bibliotecario' or user.is_superuser %}
                 | <a href="{% url 'usuarios:lista' %}">Gestión de Usuarios</a>
+                | <a href="{% url 'prestamos:gestion' %}">Gestión de Préstamos</a>
                 {% endif %}
                 | <form action="{% url 'usuarios:logout' %}" method="post" style="display:inline;">
                     {% csrf_token %}
