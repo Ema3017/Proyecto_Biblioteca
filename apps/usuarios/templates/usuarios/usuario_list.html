@@ -1,0 +1,45 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <h2>Gestión de Usuarios</h2>
+    <a href="{% url 'usuarios:crear' %}">[+] Crear Nuevo Usuario</a>
+    <br><br>
+    
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Grado</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in usuarios %}
+            <tr>
+                <td>{{ u.username }}</td>
+                <td>{{ u.get_full_name }}</td>
+                <td>{{ u.email }}</td>
+                <td>{{ u.get_rol_display }}</td>
+                <td>{{ u.get_grado_escolar_display }}</td>
+                <td>{% if u.is_active %}Activo{% else %}Suspendido{% endif %}</td>
+                <td>
+                    <a href="{% url 'usuarios:editar' u.pk %}">Editar</a> |
+                    <a href="{% url 'usuarios:eliminar' u.pk %}">Eliminar</a> |
+                    <form action="{% url 'usuarios:suspender' u.pk %}" method="post" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">{% if u.is_active %}Suspender{% else %}Activar{% endif %}</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No hay usuarios registrados.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Biblioteca UTP</title>
+</head>
+<body>
+    <header>
+        <h1>Biblioteca UTP (Fase de Desarrollo)</h1>
+        <nav>
+            {% if user.is_authenticated %}
+                <span>Bienvenido, {{ user.username }} ({{ user.get_rol_display }})</span>
+                | <a href="{% url 'usuarios:lista' %}">Gestión de Usuarios</a>
+                | <form action="{% url 'usuarios:logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit">Cerrar Sesión</button>
+                  </form>
+            {% else %}
+                <a href="{% url 'usuarios:login' %}">Iniciar Sesión</a> | 
+                <a href="{% url 'usuarios:registro' %}">Registrarse</a>
+            {% endif %}
+        </nav>
+        <hr>
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <hr>
+        <p>Sistema en Desarrollo - Backend activo.</p>
+    </footer>
+</body>
+</html>

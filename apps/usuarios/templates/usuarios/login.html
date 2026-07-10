@@ -1,0 +1,12 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <h2>Iniciar Sesión</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Entrar</button>
+    </form>
+    <br>
+    <a href="{% url 'usuarios:registro' %}">¿No tienes cuenta? Regístrate aquí</a>
+{% endblock %}
