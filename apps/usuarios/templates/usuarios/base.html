@@ -10,7 +10,10 @@
         <nav>
             {% if user.is_authenticated %}
                 <span>Bienvenido, {{ user.username }} ({{ user.get_rol_display }})</span>
+                | <a href="{% url 'libros:catalogo' %}">Catálogo de Libros</a>
+                {% if user.rol == 'bibliotecario' or user.is_superuser %}
                 | <a href="{% url 'usuarios:lista' %}">Gestión de Usuarios</a>
+                {% endif %}
                 | <form action="{% url 'usuarios:logout' %}" method="post" style="display:inline;">
                     {% csrf_token %}
                     <button type="submit">Cerrar Sesión</button>

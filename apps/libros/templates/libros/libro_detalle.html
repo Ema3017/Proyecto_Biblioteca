@@ -1,0 +1,38 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <h2>Detalle del Libro</h2>
+    
+    <div style="display: flex; gap: 20px;">
+        <div>
+            {% if libro.portada %}
+                <img src="{{ libro.portada.url }}" alt="Portada" width="200">
+            {% else %}
+                <div style="width: 200px; height: 300px; background: #ccc; display: flex; align-items: center; justify-content: center;">Sin Portada</div>
+            {% endif %}
+        </div>
+        <div>
+            <h3>{{ libro.titulo }}</h3>
+            <p><strong>Autor:</strong> {{ libro.autor }}</p>
+            <p><strong>Categoría:</strong> {{ libro.categoria }}</p>
+            <p><strong>Grado:</strong> {{ libro.get_grado_objetivo_display }}</p>
+            <p><strong>Ejemplares Disponibles:</strong> {{ libro.ejemplares_disponibles }}</p>
+            
+            <!-- Integración con Prolog vendrá aquí en la Fase 3 -->
+            {% if user.rol == 'estudiante' or user.rol == 'docente' %}
+                <button disabled>Solicitar Préstamo (Fase 3)</button>
+            {% endif %}
+        </div>
+    </div>
+    
+    <hr>
+    <h3>Leer Libro</h3>
+    {% if libro.archivo_pdf %}
+        <embed src="{{ libro.archivo_pdf.url }}" type="application/pdf" width="100%" height="600px">
+    {% else %}
+        <p>No hay archivo PDF disponible para este libro.</p>
+    {% endif %}
+    
+    <br><br>
+    <a href="{% url 'libros:catalogo' %}">Volver al Catálogo</a>
+{% endblock %}

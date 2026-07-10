@@ -1,0 +1,12 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <h2>{% if object %}Editar Libro{% else %}Subir Nuevo Libro{% endif %}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar Libro</button>
+    </form>
+    <br>
+    <a href="{% url 'libros:catalogo' %}">Volver al Catálogo</a>
+{% endblock %}

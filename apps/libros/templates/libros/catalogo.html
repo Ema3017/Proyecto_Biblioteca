@@ -1,0 +1,51 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <h2>Catálogo de Libros</h2>
+    
+    <form method="get" action="">
+        <input type="text" name="q" placeholder="Buscar por título, autor o categoría..." value="{{ request.GET.q }}">
+        <button type="submit">Buscar</button>
+    </form>
+    <br>
+
+    {% if user.rol == 'bibliotecario' or user.is_superuser %}
+        <a href="{% url 'libros:crear' %}">[+] Subir Nuevo Libro</a>
+        <br><br>
+    {% endif %}
+    
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Título</th>
+                <th>Autor</th>
+                <th>Categoría</th>
+                <th>Grado</th>
+                <th>Disponibles</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for libro in libros %}
+            <tr>
+                <td>{{ libro.titulo }}</td>
+                <td>{{ libro.autor }}</td>
+                <td>{{ libro.categoria }}</td>
+                <td>{{ libro.get_grado_objetivo_display }}</td>
+                <td>{{ libro.ejemplares_disponibles }}</td>
+                <td>
+                    <a href="{% url 'libros:detalle' libro.pk %}">Leer / Detalles</a>
+                    {% if user.rol == 'bibliotecario' or user.is_superuser %}
+                        | <a href="{% url 'libros:editar' libro.pk %}">Editar</a>
+                        | <a href="{% url 'libros:eliminar' libro.pk %}">Eliminar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6">No se encontraron libros para tu perfil o búsqueda.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

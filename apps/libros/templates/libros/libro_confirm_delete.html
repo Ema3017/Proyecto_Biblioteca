@@ -1,0 +1,12 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <h2>Confirmar Eliminación</h2>
+    <p>¿Estás seguro que deseas eliminar el libro "{{ object.titulo }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Sí, eliminar libro</button>
+    </form>
+    <br>
+    <a href="{% url 'libros:catalogo' %}">Cancelar y Volver</a>
+{% endblock %}
