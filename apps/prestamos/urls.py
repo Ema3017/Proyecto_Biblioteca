@@ -9,4 +9,6 @@ urlpatterns = [
     path('gestion/', views.GestionPrestamosView.as_view(), name='gestion'),
     path('devolver/<int:prestamo_id>/', views.devolver_prestamo, name='devolver'),
     path('atraso/<int:prestamo_id>/', views.marcar_atraso, name='marcar_atraso'),
+    path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
+    path('exportar/', views.exportar_excel_prestamos, name='exportar_excel'),
 ]

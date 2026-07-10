@@ -17,6 +17,7 @@
                 {% if user.rol == 'bibliotecario' or user.is_superuser %}
                 | <a href="{% url 'usuarios:lista' %}">Gestión de Usuarios</a>
                 | <a href="{% url 'prestamos:gestion' %}">Gestión de Préstamos</a>
+                | <a href="{% url 'prestamos:dashboard' %}">Dashboard / Reportes</a>
                 {% endif %}
                 | <form action="{% url 'usuarios:logout' %}" method="post" style="display:inline;">
                     {% csrf_token %}

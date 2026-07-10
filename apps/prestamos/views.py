@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from django.contrib import messages
 from django.utils import timezone
-from django.core.mail import send_mail
+from django.http import HttpResponse
+import openpyxl
 from datetime import timedelta
+from django.core.mail import send_mail
 from .models import Prestamo
 from apps.libros.models import Libro
 from .prolog.engine import engine
@@ -121,3 +123,57 @@ def marcar_atraso(request, prestamo_id):
         messages.error(request, f"El préstamo de {prestamo.usuario.username} fue marcado como Atrasado. Sanción aplicada y notificada.")
         
     return redirect('prestamos:gestion')
+
+class DashboardView(LoginRequiredMixin, BibliotecarioRequiredMixin, TemplateView):
+    template_name = 'prestamos/dashboard.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Métricas de préstamos
+        context['total_activos'] = Prestamo.objects.filter(estado='activo').count()
+        context['total_atrasados'] = Prestamo.objects.filter(estado='atrasado').count()
+        context['total_devueltos'] = Prestamo.objects.filter(estado='devuelto').count()
+        
+        # Métricas generales
+        from apps.usuarios.models import Usuario
+        context['total_usuarios'] = Usuario.objects.count()
+        context['total_libros'] = Libro.objects.count()
+        
+        return context
+
+@login_required
+def exportar_excel_prestamos(request):
+    if not (request.user.rol == 'bibliotecario' or request.user.is_superuser):
+        return redirect('prestamos:mis_prestamos')
+        
+    # Crear un libro de trabajo de Excel real
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Reporte de Prestamos"
+    
+    # Escribir la cabecera
+    columnas = ['Usuario', 'Rol', 'Libro', 'Fecha Prestamo', 'Fecha Esperada', 'Fecha Real', 'Estado']
+    ws.append(columnas)
+    
+    # Escribir los datos
+    prestamos = Prestamo.objects.all().order_by('-fecha_prestamo')
+    for p in prestamos:
+        ws.append([
+            p.usuario.username,
+            p.usuario.get_rol_display(),
+            p.libro.titulo,
+            p.fecha_prestamo.strftime("%Y-%m-%d") if p.fecha_prestamo else "",
+            p.fecha_devolucion_esperada.strftime("%Y-%m-%d") if p.fecha_devolucion_esperada else "",
+            p.fecha_devolucion_real.strftime("%Y-%m-%d") if p.fecha_devolucion_real else 'N/A',
+            p.get_estado_display()
+        ])
+        
+    # Preparar la respuesta HTTP con el tipo de contenido correcto para Excel
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename="Reporte_N_1.xlsx"'
+    
+    # Guardar el libro de trabajo en la respuesta
+    wb.save(response)
+    
+    return response

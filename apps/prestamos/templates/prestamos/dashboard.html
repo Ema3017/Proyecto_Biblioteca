@@ -1,0 +1,33 @@
+{% extends 'usuarios/base.html' %}
+
+{% block content %}
+    <h2>Dashboard Administrativo</h2>
+    <p>Resumen del sistema en tiempo real.</p>
+    
+    <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+        <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px; text-align: center; flex: 1;">
+            <h3>Activos</h3>
+            <p style="font-size: 24px; color: blue;">{{ total_activos }}</p>
+        </div>
+        <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px; text-align: center; flex: 1;">
+            <h3>Atrasados</h3>
+            <p style="font-size: 24px; color: red;">{{ total_atrasados }}</p>
+        </div>
+        <div style="border: 1px solid #ccc; padding: 20px; border-radius: 8px; text-align: center; flex: 1;">
+            <h3>Devueltos</h3>
+            <p style="font-size: 24px; color: green;">{{ total_devueltos }}</p>
+        </div>
+    </div>
+    
+    <hr>
+    
+    <h3>Reportes Exportables</h3>
+    <p>Descarga la información de préstamos para su análisis en Excel (.xlsx).</p>
+    
+    <form action="{% url 'prestamos:exportar_excel' %}" method="get">
+        <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            📥 Descargar Reporte Completo (Excel)
+        </button>
+    </form>
+    
+{% endblock %}
