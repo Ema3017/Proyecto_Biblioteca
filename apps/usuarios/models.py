@@ -2,6 +2,11 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class Usuario(AbstractUser):
+    """
+    Modelo personalizado de Usuario.
+    Extiende AbstractUser de Django para añadir el rol (estudiante, docente, bibliotecario),
+    el grado escolar y un estado de sanción (is_sancionado) utilizado para bloquear préstamos.
+    """
     # Definimos los roles según el informe técnico
     ROLES = (
         ('estudiante', 'Estudiante'),

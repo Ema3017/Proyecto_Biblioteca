@@ -13,6 +13,7 @@ from apps.libros.models import Libro
 from .prolog.engine import engine
 
 class BibliotecarioRequiredMixin(UserPassesTestMixin):
+    """Mixin de seguridad para limitar el acceso a bibliotecarios."""
     def test_func(self):
         return self.request.user.is_superuser or self.request.user.rol == 'bibliotecario'
 
@@ -56,6 +57,10 @@ def solicitar_prestamo(request, libro_id):
     return redirect('libros:detalle', pk=libro_id)
 
 class MisPrestamosView(LoginRequiredMixin, ListView):
+    """
+    Vista para estudiantes/docentes.
+    Lista exclusivamente los préstamos activos e históricos pertenecientes al usuario en sesión.
+    """
     model = Prestamo
     template_name = 'prestamos/mis_prestamos.html'
     context_object_name = 'prestamos'
@@ -64,6 +69,10 @@ class MisPrestamosView(LoginRequiredMixin, ListView):
         return Prestamo.objects.filter(usuario=self.request.user).order_by('-fecha_prestamo')
 
 class GestionPrestamosView(LoginRequiredMixin, BibliotecarioRequiredMixin, ListView):
+    """
+    Vista administrativa para el bibliotecario.
+    Muestra todos los préstamos de la biblioteca para auditar y gestionar devoluciones.
+    """
     model = Prestamo
     template_name = 'prestamos/gestion.html'
     context_object_name = 'prestamos'
@@ -125,6 +134,10 @@ def marcar_atraso(request, prestamo_id):
     return redirect('prestamos:gestion')
 
 class DashboardView(LoginRequiredMixin, BibliotecarioRequiredMixin, TemplateView):
+    """
+    Vista del panel de control principal.
+    Calcula KPIs en tiempo real (usuarios, préstamos activos, atrasos) para uso administrativo.
+    """
     template_name = 'prestamos/dashboard.html'
     
     def get_context_data(self, **kwargs):

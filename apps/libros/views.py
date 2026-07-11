@@ -8,10 +8,15 @@ from .forms import LibroForm
 from apps.prestamos.prolog.engine import engine
 
 class BibliotecarioRequiredMixin(UserPassesTestMixin):
+    """Mixin para restringir el acceso a vistas únicamente a bibliotecarios o superusuarios."""
     def test_func(self):
         return self.request.user.is_superuser or self.request.user.rol == 'bibliotecario'
 
 class CatalogoView(LoginRequiredMixin, ListView):
+    """
+    Vista principal del catálogo de libros.
+    Filtra los resultados según el rol y grado del usuario, y provee un buscador general.
+    """
     model = Libro
     template_name = 'libros/catalogo.html'
     context_object_name = 'libros'
@@ -41,6 +46,10 @@ class CatalogoView(LoginRequiredMixin, ListView):
         return queryset
 
 class LibroDetailView(LoginRequiredMixin, DetailView):
+    """
+    Vista de detalles de un libro específico.
+    Se comunica con Prolog (IA) para calcular recomendaciones basadas en la categoría.
+    """
     model = Libro
     template_name = 'libros/libro_detalle.html'
     context_object_name = 'libro'
@@ -71,18 +80,21 @@ class LibroDetailView(LoginRequiredMixin, DetailView):
         return context
 
 class LibroCreateView(LoginRequiredMixin, BibliotecarioRequiredMixin, CreateView):
+    """Formulario para registrar un nuevo libro en el catálogo."""
     model = Libro
     form_class = LibroForm
     template_name = 'libros/libro_form.html'
     success_url = reverse_lazy('libros:catalogo')
 
 class LibroUpdateView(LoginRequiredMixin, BibliotecarioRequiredMixin, UpdateView):
+    """Formulario para actualizar los datos o archivos de un libro existente."""
     model = Libro
     form_class = LibroForm
     template_name = 'libros/libro_form.html'
     success_url = reverse_lazy('libros:catalogo')
 
 class LibroDeleteView(LoginRequiredMixin, BibliotecarioRequiredMixin, DeleteView):
+    """Pantalla de confirmación para eliminar definitivamente un libro del sistema."""
     model = Libro
     template_name = 'libros/libro_confirm_delete.html'
     success_url = reverse_lazy('libros:catalogo')

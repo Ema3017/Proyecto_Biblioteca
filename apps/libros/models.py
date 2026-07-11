@@ -1,6 +1,11 @@
 from django.db import models
 
 class Libro(models.Model):
+    """
+    Modelo central del Catálogo.
+    Almacena los metadatos bibliográficos, la portada, el archivo PDF para lectura digital
+    y el control de stock (ejemplares_disponibles).
+    """
     # Filtros que coinciden con los grados de los usuarios
     GRADOS_DESTINO = (
         ('primaria', 'Primaria'),

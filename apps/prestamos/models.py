@@ -3,6 +3,11 @@ from django.conf import settings
 from apps.libros.models import Libro
 
 class Prestamo(models.Model):
+    """
+    Representa una transacción de préstamo de un libro.
+    Vincula a un Usuario con un Libro, registrando fechas críticas y el estado actual 
+    (activo, devuelto, atrasado) para aplicar la lógica del negocio.
+    """
     # Estados lógicos para el control de la biblioteca
     ESTADOS = (
         ('activo', 'Activo / En Curso'),
