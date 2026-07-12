@@ -1,12 +1,46 @@
 {% extends 'usuarios/base.html' %}
 
 {% block content %}
-    <h2>Confirmar Eliminación</h2>
-    <p>¿Estás seguro que deseas eliminar al usuario "{{ object.username }}"?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Sí, eliminar</button>
-    </form>
-    <br>
-    <a href="{% url 'usuarios:lista' %}">Cancelar y Volver</a>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            
+            <div class="card shadow border-0 rounded-3">
+                <div class="card-header bg-danger text-white text-center py-4">
+                    <h4 class="fw-bold mb-0">
+                        <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>Confirmar Eliminación
+                    </h4>
+                    <small class="text-white-50">Esta acción no se puede deshacer</small>
+                </div>
+                <div class="card-body p-5 text-center">
+                    
+                    <div class="mb-4">
+                        <i class="bi bi-person-x text-danger display-3"></i>
+                    </div>
+                    
+                    <h5 class="text-dark mb-3">¿Estás seguro de que deseas eliminar al usuario?</h5>
+                    <p class="bg-light p-3 rounded fw-bold text-secondary border fs-5">
+                        <i class="bi bi-person me-2"></i>{{ object.username }}
+                    </p>
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger py-2 fw-bold shadow-sm">
+                                <i class="bi bi-trash3-fill me-2"></i>Sí, eliminar definitivamente
+                            </button>
+                            
+                            <a href="{% url 'usuarios:lista' %}" class="btn btn-outline-secondary py-2 fw-semibold mt-2">
+                                Cancelar y Volver
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 {% endblock %}

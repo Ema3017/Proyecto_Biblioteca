@@ -1,12 +1,47 @@
 {% extends 'usuarios/base.html' %}
 
 {% block content %}
-    <h2>Confirmar Eliminación</h2>
-    <p>¿Estás seguro que deseas eliminar el libro "{{ object.titulo }}"?</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Sí, eliminar libro</button>
-    </form>
-    <br>
-    <a href="{% url 'libros:catalogo' %}">Cancelar y Volver</a>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            
+            <div class="card shadow border-0 rounded-3">
+                <div class="card-header bg-danger text-white text-center py-4">
+                    <h4 class="fw-bold mb-0">
+                        <i class="bi bi-exclamation-triangle-fill me-2 text-warning"></i>Eliminar Libro del Sistema
+                    </h4>
+                    <small class="text-white-50">Esta acción removerá el registro y sus ejemplares definitivamente</small>
+                </div>
+                <div class="card-body p-5 text-center">
+                    
+                    <div class="mb-4">
+                        <i class="bi bi-book-half text-danger display-3"></i>
+                    </div>
+                    
+                    <h5 class="text-dark mb-3">¿Estás seguro de que deseas dar de baja este libro?</h5>
+                    
+                    <p class="bg-light p-3 rounded fw-bold text-secondary border fs-5 text-wrap">
+                        <i class="bi bi-journal-text me-2 text-primary"></i>{{ object.titulo }}
+                    </p>
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger py-2 fw-bold shadow-sm">
+                                <i class="bi bi-trash3-fill me-2"></i>Confirmar y Eliminar
+                            </button>
+                            
+                            <a href="{% url 'libros:catalogo' %}" class="btn btn-outline-secondary py-2 fw-semibold mt-2">
+                                Cancelar y Volver al Catálogo
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 {% endblock %}
