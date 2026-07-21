@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import procesar_mensaje_chat
 
 app_name = 'prestamos'
 
@@ -11,4 +12,5 @@ urlpatterns = [
     path('atraso/<int:prestamo_id>/', views.marcar_atraso, name='marcar_atraso'),
     path('dashboard/', views.DashboardView.as_view(), name='dashboard'),
     path('exportar/', views.exportar_excel_prestamos, name='exportar_excel'),
+    path('api/chat/', procesar_mensaje_chat, name='procesar_mensaje_chat'),
 ]

@@ -11,6 +11,24 @@ from django.core.mail import send_mail
 from .models import Prestamo
 from apps.libros.models import Libro
 from .prolog.engine import engine
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .chatbot import BibliotecaChatbot
+
+@csrf_exempt
+def procesar_mensaje_chat(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        mensaje = data.get('mensaje', '')
+
+        # Instanciamos nuestra clase pasando el usuario actual
+        bot = BibliotecaChatbot(usuario=request.user)
+        respuesta = bot.responder(mensaje)
+
+        return JsonResponse({'status': 'success', 'respuesta': respuesta})
+    
+    return JsonResponse({'status': 'error', 'mensaje': 'Método no permitido'}, status=400)
 
 class BibliotecarioRequiredMixin(UserPassesTestMixin):
     def test_func(self):
