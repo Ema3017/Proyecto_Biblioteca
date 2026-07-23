@@ -1,12 +1,101 @@
 {% extends 'usuarios/base.html' %}
 
 {% block content %}
-    <h2>{% if object %}Editar Libro{% else %}Subir Nuevo Libro{% endif %}</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar Libro</button>
-    </form>
-    <br>
-    <a href="{% url 'libros:catalogo' %}">Volver al Catálogo</a>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-7">
+            
+            <!-- Tarjeta del Formulario de Libros -->
+            <div class="card shadow border-0 rounded-3">
+                <div class="card-header bg-dark text-white text-center py-4">
+                    <h4 class="fw-bold mb-0">
+                        {% if object %}
+                            <i class="bi bi-pencil-square me-2 text-warning"></i>Editar Datos del Libro
+                        {% else %}
+                            <i class="bi bi-journal-plus me-2 text-success"></i>Subir Nuevo Libro
+                        {% endif %}
+                    </h4>
+                    <small class="text-white-50">Completa la información técnica del ejemplar</small>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <form method="post" enctype="multipart/form-data" class="needs-validation">
+                        {% csrf_token %}
+                        
+                        <!-- Contenedor para inyectar estilos Bootstrap a los inputs automáticos de Django -->
+                        <div class="mb-4 d-grid gap-3 book-form-fields">
+                            {{ form.as_p }}
+                        </div>
+
+                        <!-- Botón de Acción -->
+                        <button type="submit" class="btn btn-primary w-100 py-2.5 fw-bold shadow-sm mb-2">
+                            <i class="bi bi-cloud-arrow-up-fill me-2"></i>Guardar Libro
+                        </button>
+                    </form>
+
+                </div>
+                <div class="card-footer bg-light text-center py-3">
+                    <a href="{% url 'libros:catalogo' %}" class="text-decoration-none small fw-semibold text-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Volver al Catálogo
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Estilos para forzar el diseño de Bootstrap 5 en los inputs nativos de Django -->
+<style>
+    .book-form-fields p {
+        margin-bottom: 1.2rem;
+    }
+    .book-form-fields label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #212529;
+    }
+    .book-form-fields input, 
+    .book-form-fields select, 
+    .book-form-fields textarea {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+    .book-form-fields textarea {
+        min-height: 100px;
+    }
+    .book-form-fields input[type="file"] {
+        padding: 0.25rem 0.5rem;
+    }
+    .book-form-fields input:focus, 
+    .book-form-fields select:focus, 
+    .book-form-fields textarea:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    }
+    .book-form-fields .helptext {
+        display: block;
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+    .book-form-fields ul.errorlist {
+        padding-left: 0;
+        list-style: none;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+</style>
 {% endblock %}

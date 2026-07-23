@@ -1,53 +1,139 @@
 {% extends 'usuarios/base.html' %}
 
 {% block content %}
-    <h2>Detalle del Libro</h2>
+<div class="container my-5">
     
-    <div style="display: flex; gap: 20px;">
-        <div>
+    <!-- Enlace para regresar -->
+    <div class="mb-4">
+        <a href="{% url 'libros:catalogo' %}" class="btn btn-sm btn-light text-secondary border fw-semibold">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Catálogo
+        </a>
+    </div>
+
+    <!-- Sección Superior: Ficha del Libro y Recomendaciones -->
+    <div class="row g-4 mb-5">
+        
+        <!-- Columna Izquierda: Portada del Libro -->
+        <div class="col-12 col-md-4 col-lg-3 text-center text-md-start">
             {% if libro.portada %}
-                <img src="{{ libro.portada.url }}" alt="Portada" width="200">
+                <img src="{{ libro.portada.url }}" alt="Portada de {{ libro.titulo }}" class="img-fluid rounded-3 shadow-sm border w-100" style="max-width: 260px; object-fit: cover;">
             {% else %}
-                <div style="width: 200px; height: 300px; background: #ccc; display: flex; align-items: center; justify-content: center;">Sin Portada</div>
+                <div class="rounded-3 shadow-sm border bg-light d-flex flex-column align-items-center justify-content-center mx-auto mx-md-0" style="width: 100%; max-width: 260px; height: 360px;">
+                    <i class="bi bi-book text-muted display-3 mb-2"></i>
+                    <span class="text-muted small fw-medium">Sin Portada Disponible</span>
+                </div>
             {% endif %}
         </div>
-        <div>
-            <h3>{{ libro.titulo }}</h3>
-            <p><strong>Autor:</strong> {{ libro.autor }}</p>
-            <p><strong>Categoría:</strong> {{ libro.categoria }}</p>
-            <p><strong>Grado:</strong> {{ libro.get_grado_objetivo_display }}</p>
-            <p><strong>Ejemplares Disponibles:</strong> {{ libro.ejemplares_disponibles }}</p>
-            
-            <!-- Integración con Prolog (Fase 3) -->
-            {% if user.rol == 'estudiante' or user.rol == 'docente' %}
-                <form action="{% url 'prestamos:solicitar' libro.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" {% if libro.ejemplares_disponibles <= 0 %}disabled{% endif %}>
-                        Solicitar Préstamo (Evaluado por IA)
-                    </button>
-                </form>
+
+        <!-- Columna Central: Información del Libro y Acción -->
+        <div class="col-12 col-md-8 col-lg-6">
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2.5 py-1.5 mb-2 fw-semibold text-uppercase">
+                {{ libro.categoria }}
+            </span>
+            <h1 class="fw-bold text-dark mb-1">{{ libro.titulo }}</h1>
+            <p class="fs-5 text-secondary mb-4">Por: <span class="text-dark fw-medium">{{ libro.autor }}</span></p>
+
+            <!-- Detalles en Lista -->
+            <div class="card card-body border-0 bg-light p-3 mb-4 shadow-sm">
+                <div class="row g-3">
+                    <div class="col-6">
+                        <small class="text-muted d-block text-uppercase fw-bold fs-7">Grado Destinado</small>
+                        <span class="text-dark fw-semibold">{{ libro.get_grado_objetivo_display }}</span>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted d-block text-uppercase fw-bold fs-7">Disponibilidad</small>
+                        {% if libro.ejemplares_disponibles > 0 %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 fw-bold">
+                                {{ libro.ejemplares_disponibles }} Unidades
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2.5 py-1 fw-bold">
+                                Agotado temporalmente
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón de Solicitud con IA (Solo Alumnos y Docentes) -->
+            {% if user.role == 'estudiante' or user.role == 'docente' %}
+                <div class="card border-0 bg-dark text-white p-3 shadow-sm">
+                    <div class="d-flex align-items-start gap-3 mb-3">
+                        <div class="bg-primary text-white rounded p-2 fs-4 line-height-1">
+                            <i class="bi bi-cpu"></i>
+                        </div>
+                        <div>
+                            <h6 class="fw-bold mb-0 text-warning">Evaluación Inteligente Activada</h6>
+                            <small class="text-white-50">Nuestro modelo analizará tu historial académico para autorizar la entrega de este recurso.</small>
+                        </div>
+                    </div>
+                    <form action="{% url 'prestamos:solicitar' libro.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary w-100 fw-bold d-flex align-items-center justify-content-center py-2" {% if libro.ejemplares_disponibles <= 0 %}disabled{% endif %}>
+                            <i class="bi bi-magic me-2"></i> Solicitar Préstamo Directo
+                        </button>
+                    </form>
+                </div>
             {% endif %}
-            
-            <hr>
-            <h4>Recomendados por IA</h4>
-            <ul>
-                {% for rec in recomendados %}
-                    <li><a href="{% url 'libros:detalle' rec.id %}">{{ rec.titulo }}</a></li>
-                {% empty %}
-                    <li>No hay recomendaciones en este momento.</li>
-                {% endfor %}
-            </ul>
+        </div>
+
+        <!-- Columna Derecha: Recomendados por IA -->
+        <div class="col-12 col-lg-3">
+            <div class="card border-0 bg-light p-3 shadow-sm h-100">
+                <h6 class="fw-bold text-dark border-bottom pb-2 mb-3 d-flex align-items-center">
+                    <i class="bi bi-stars text-warning me-2"></i> Recomendados por IA
+                </h6>
+                <div class="d-grid gap-2">
+                    {% for rec in recomendados %}
+                        <a href="{% url 'libros:detalle' rec.id %}" class="btn btn-white bg-white text-start border shadow-xs p-2.5 rounded-3 d-flex align-items-center justify-content-between text-decoration-none custom-rec-card">
+                            <span class="text-truncate text-dark fw-medium small pe-2">{{ rec.titulo }}</span>
+                            <i class="bi bi-chevron-right text-muted small"></i>
+                        </a>
+                    {% empty %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-inbox text-muted fs-4 mb-1 d-block"></i>
+                            <span class="text-muted small d-block">No hay sugerencias por ahora.</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Sección Inferior: Visor del Libro PDF -->
+    <div class="card shadow border-0 rounded-3 overflow-hidden">
+        <div class="card-header bg-secondary text-white py-3 d-flex align-items-center justify-content-between">
+            <h5 class="mb-0 fw-bold d-flex align-items-center">
+                <i class="bi bi-file-earmark-pdf-fill me-2 text-warning"></i> Contenido Digital / Lectura en Línea
+            </h5>
+        </div>
+        <div class="card-body p-0 bg-dark">
+            {% if libro.archivo_pdf %}
+                <div class="ratio ratio-16x9" style="min-height: 600px;">
+                    <embed src="{{ libro.archivo_pdf.url }}" type="application/pdf" width="100%" height="100%">
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-white-50 my-4">
+                    <i class="bi bi-file-earmark-lock text-muted display-4 mb-3 d-block"></i>
+                    <p class="mb-0 fs-5">Este ejemplar solo está disponible de manera física en sala.</p>
+                    <small class="text-muted">No se ha cargado una copia digital en formato PDF.</small>
+                </div>
+            {% endif %}
         </div>
     </div>
-    
-    <hr>
-    <h3>Leer Libro</h3>
-    {% if libro.archivo_pdf %}
-        <embed src="{{ libro.archivo_pdf.url }}" type="application/pdf" width="100%" height="600px">
-    {% else %}
-        <p>No hay archivo PDF disponible para este libro.</p>
-    {% endif %}
-    
-    <br><br>
-    <a href="{% url 'libros:catalogo' %}">Volver al Catálogo</a>
+
+</div>
+
+<!-- Estilos personalizados para efectos visuales -->
+<style>
+    .fs-7 { font-size: 0.75rem; }
+    .custom-rec-card:hover {
+        border-color: #0d6efd !important;
+        background-color: #f8f9fa !important;
+        transform: translateX(3px);
+        transition: all 0.2s ease;
+    }
+    .line-height-1 { line-height: 1; }
+</style>
 {% endblock %}

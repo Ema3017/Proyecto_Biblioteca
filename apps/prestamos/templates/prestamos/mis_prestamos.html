@@ -1,38 +1,64 @@
 {% extends 'usuarios/base.html' %}
 
 {% block content %}
-    <h2>Mis Préstamos</h2>
-    
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Libro</th>
-                <th>Fecha de Préstamo</th>
-                <th>Fecha Límite</th>
-                <th>Estado</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for p in prestamos %}
-            <tr>
-                <td>{{ p.libro.titulo }}</td>
-                <td>{{ p.fecha_prestamo }}</td>
-                <td>{{ p.fecha_devolucion_esperada }}</td>
-                <td>
-                    {% if p.estado == 'atrasado' %}
-                        <span style="color:red; font-weight:bold;">Atrasado (MULTA)</span>
-                    {% elif p.estado == 'devuelto' %}
-                        <span style="color:green;">Devuelto</span>
-                    {% else %}
-                        <span style="color:blue;">Activo</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="4">No tienes libros prestados.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container my-5 p-4 bg-white rounded shadow-sm">
+    <div class="d-flex align-items-center mb-4 pb-3 border-bottom">
+        <div class="bg-primary bg-opacity-10 p-3 rounded me-3 text-primary">
+            <i class="bi bi-journal-bookmark-fill fs-3"></i>
+        </div>
+        <div>
+            <h2 class="text-dark fw-bold mb-0">Mis Préstamos</h2>
+            <small class="text-muted">Historial y estado de tus libros solicitados en la biblioteca</small>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle border">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col" class="py-3"><i class="bi bi-book me-2"></i>Libro</th>
+                    <th scope="col" class="py-3"><i class="bi bi-calendar-event me-2"></i>Fecha de Préstamos</th>
+                    <th scope="col" class="py-3"><i class="bi bi-calendar-check me-2"></i>Fecha Límite</th>
+                    <th scope="col" class="py-3 text-center"><i class="bi bi-info-circle me-2"></i>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in prestamos %}
+                <tr>
+                    <td class="fw-semibold text-secondary py-3">
+                        {{ p.libro.titulo }}
+                    </td>
+                    <td>{{ p.fecha_prestamo }}</td>
+                    <td>{{ p.fecha_devolucion_esperada }}</td>
+                    <td class="text-center">
+                        {% if p.estado == 'atrasado' %}
+                        <span class="badge bg-danger px-3 py-2 rounded-pill shadow-sm">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> Atrasado (MULTA)
+                        </span>
+                        {% elif p.estado == 'devuelto' %}
+                        <span class="badge bg-success px-3 py-2 rounded-pill shadow-sm">
+                            <i class="bi bi-check-circle-fill me-1"></i> Devuelto
+                        </span>
+                        {% else %}
+                        <span class="badge bg-primary px-3 py-2 rounded-pill shadow-sm">
+                            <i class="bi bi-clock-history me-1"></i> Activo
+                        </span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-5">
+                        <div class="text-muted mb-2">
+                            <i class="bi bi-inbox fs-1 text-light-emphasis"></i>
+                        </div>
+                        <h5 class="text-secondary fw-bold">No tienes libros prestados</h5>
+                        <p class="text-muted small mb-0">Cuando solicites un libro en el mostrador, aparecerá listado en este panel.</p>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

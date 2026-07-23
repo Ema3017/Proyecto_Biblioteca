@@ -1,12 +1,91 @@
 {% extends 'usuarios/base.html' %}
 
 {% block content %}
-    <h2>{% if object %}Editar Usuario{% else %}Crear Nuevo Usuario{% endif %}</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Guardar</button>
-    </form>
-    <br>
-    <a href="{% url 'usuarios:lista' %}">Volver a la lista</a>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            
+            <!-- Tarjeta de Formulario de Usuario -->
+            <div class="card shadow border-0 rounded-3">
+                <div class="card-header bg-dark text-white text-center py-4">
+                    <h4 class="fw-bold mb-0">
+                        {% if object %}
+                            <i class="bi bi-pencil-square me-2 text-warning"></i>Editar Usuario
+                        {% else %}
+                            <i class="bi bi-person-plus-fill me-2 text-warning"></i>Crear Nuevo Usuario
+                        {% endif %}
+                    </h4>
+                    <small class="text-white-50">Formulario administrativo de la plataforma</small>
+                </div>
+                <div class="card-body p-4">
+                    
+                    <form method="post" class="needs-validation">
+                        {% csrf_token %}
+                        
+                        <!-- Contenedor para inyectar estilos a los campos de Django -->
+                        <div class="mb-4 d-grid gap-3 user-form-fields">
+                            {{ form.as_p }}
+                        </div>
+
+                        <!-- Botón de Guardar -->
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm mb-2">
+                            <i class="bi bi-save me-2"></i>Guardar Cambios
+                        </button>
+                    </form>
+
+                </div>
+                <div class="card-footer bg-light text-center py-3">
+                    <a href="{% url 'usuarios:lista' %}" class="text-decoration-none small fw-semibold text-secondary">
+                        <i class="bi bi-arrow-left me-1"></i> Volver a la lista
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Estilos para forzar el diseño de Bootstrap 5 en los inputs nativos de Django -->
+<style>
+    .user-form-fields p {
+        margin-bottom: 1rem;
+    }
+    .user-form-fields label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #212529;
+    }
+    .user-form-fields input, .user-form-fields select {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+    .user-form-fields input:focus, .user-form-fields select:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    }
+    .user-form-fields .helptext {
+        display: block;
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+    .user-form-fields ul.errorlist {
+        padding-left: 0;
+        list-style: none;
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+</style>
 {% endblock %}

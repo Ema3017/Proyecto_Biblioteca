@@ -11,6 +11,24 @@ from django.core.mail import send_mail
 from .models import Prestamo
 from apps.libros.models import Libro
 from .prolog.engine import engine
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .chatbot import BibliotecaChatbot
+
+@csrf_exempt
+def procesar_mensaje_chat(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        mensaje = data.get('mensaje', '')
+
+        # Instanciamos nuestra clase pasando el usuario actual
+        bot = BibliotecaChatbot(usuario=request.user)
+        respuesta = bot.responder(mensaje)
+
+        return JsonResponse({'status': 'success', 'respuesta': respuesta})
+    
+    return JsonResponse({'status': 'error', 'mensaje': 'Método no permitido'}, status=400)
 
 class BibliotecarioRequiredMixin(UserPassesTestMixin):
     """Mixin de seguridad para limitar el acceso a bibliotecarios."""
@@ -141,19 +159,28 @@ class DashboardView(LoginRequiredMixin, BibliotecarioRequiredMixin, TemplateView
     template_name = 'prestamos/dashboard.html'
     
     def get_context_data(self, **kwargs):
+        # 1. Llamamos al contexto base
         context = super().get_context_data(**kwargs)
         
-        # Métricas de préstamos
-        context['total_activos'] = Prestamo.objects.filter(estado='activo').count()
-        context['total_atrasados'] = Prestamo.objects.filter(estado='atrasado').count()
-        context['total_devueltos'] = Prestamo.objects.filter(estado='devuelto').count()
-        
-        # Métricas generales
-        from apps.usuarios.models import Usuario
-        context['total_usuarios'] = Usuario.objects.count()
-        context['total_libros'] = Libro.objects.count()
+        # 2. AQUÍ COLOCAS TU LÓGICA DE CÁLCULO
+        context['total'] = Prestamo.objects.count()
+        context['activos'] = Prestamo.objects.filter(estado='activo').count()
+        context['atrasados'] = Prestamo.objects.filter(estado='atrasado').count()
         
         return context
+        #context = super().get_context_data(**kwargs)
+        
+        # Métricas de préstamos
+        #context['total_activos'] = Prestamo.objects.filter(estado='activo').count()
+        #context['total_atrasados'] = Prestamo.objects.filter(estado='atrasado').count()
+        #context['total_devueltos'] = Prestamo.objects.filter(estado='devuelto').count()
+        
+        # Métricas generales
+        #from apps.usuarios.models import Usuario
+        #context['total_usuarios'] = Usuario.objects.count()
+        #context['total_libros'] = Libro.objects.count()
+        
+        #return context 
 
 @login_required
 def exportar_excel_prestamos(request):
