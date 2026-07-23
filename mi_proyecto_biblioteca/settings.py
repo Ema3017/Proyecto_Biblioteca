@@ -132,6 +132,9 @@ import os
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Permitir embeber iframes locales (para ver el PDF)
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
