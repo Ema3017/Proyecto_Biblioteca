@@ -125,7 +125,7 @@ def devolver_prestamo(request, prestamo_id):
             
         messages.success(request, f"Libro {prestamo.libro.titulo} devuelto correctamente y notificación enviada.")
         
-    return redirect('prestamos:gestion')
+    return redirect('prestamos:gestion_prestamos')
 
 @login_required
 def marcar_atraso(request, prestamo_id):
@@ -149,7 +149,7 @@ def marcar_atraso(request, prestamo_id):
             
         messages.error(request, f"El préstamo de {prestamo.usuario.username} fue marcado como Atrasado. Sanción aplicada y notificada.")
         
-    return redirect('prestamos:gestion')
+    return redirect('prestamos:gestion_prestamos')
 
 class DashboardView(LoginRequiredMixin, BibliotecarioRequiredMixin, TemplateView):
     """
