@@ -14,7 +14,7 @@ class RegistroUsuarioView(CreateView):
     model = Usuario
     form_class = UsuarioCreationForm
     template_name = 'usuarios/registro.html'
-    success_url = reverse_lazy('usuarios:lista')
+    success_url = reverse_lazy('libros:catalogo')
 
     def form_valid(self, form):
         response = super().form_valid(form)
