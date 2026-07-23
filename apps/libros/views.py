@@ -82,6 +82,18 @@ class LibroDetailView(LoginRequiredMixin, DetailView):
                 if len(recomendados) >= 3:
                     break
         context['recomendados'] = recomendados
+        
+        # Verificar si el usuario tiene permiso para leer/descargar el libro
+        # Bibliotecarios y superusuarios siempre pueden.
+        tiene_prestamo = False
+        if usuario.is_superuser or usuario.rol == 'bibliotecario':
+            tiene_prestamo = True
+        else:
+            from apps.prestamos.models import Prestamo
+            tiene_prestamo = Prestamo.objects.filter(usuario=usuario, libro=libro_actual, estado='activo').exists()
+            
+        context['tiene_prestamo'] = tiene_prestamo
+
         return context
 
 class LibroCreateView(LoginRequiredMixin, DocenteOrBibliotecarioRequiredMixin, CreateView):
