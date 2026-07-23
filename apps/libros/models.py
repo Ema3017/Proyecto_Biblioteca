@@ -23,3 +23,10 @@ class Libro(models.Model):
 
     def __str__(self):
         return f"{self.titulo} - {self.autor} ({self.get_grado_objetivo_display()})"
+
+    @property
+    def es_pdf(self):
+        """Verifica si el archivo subido es de tipo PDF"""
+        if self.archivo_pdf:
+            return self.archivo_pdf.name.lower().endswith('.pdf')
+        return False
