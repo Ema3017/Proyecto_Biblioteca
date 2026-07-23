@@ -19,6 +19,19 @@ class BibliotecaChatbot:
         elif any(palabra in mensaje for palabra in ['hola', 'buenos días', 'buenas tardes', 'hey']):
             return "¡Hola! Soy el asistente virtual de la biblioteca UTP. ¿En qué te puedo ayudar hoy?"
 
+        # Regla 4: Respuesta a solicitud de libro
+        mensaje_limpio = mensaje.replace('ó','o').replace('á','a').replace('é','e').replace('í','i').replace('ú','u')
+        if any(palabra in mensaje_limpio for palabra in ['si', 'quiero', 'solicitar', 'me interesa', 'el de']):
+            libros = Libro.objects.all()
+            for libro in libros:
+                titulo_limpio = libro.titulo.lower().replace('ó','o').replace('á','a').replace('é','e').replace('í','i').replace('ú','u')
+                if titulo_limpio in mensaje_limpio:
+                    return f"¡Excelente elección! Para pedir '{libro.titulo}', por favor búscalo en el Catálogo y haz clic en el botón 'Solicitar Préstamo Directo'."
+            
+            # Si dice que sí pero no menciona el libro exacto
+            if 'si' in mensaje_limpio.split() or 'quiero' in mensaje_limpio.split():
+                 return "¡Genial! Por favor ve a la pestaña de 'Catálogo', busca el libro que te interesa y haz clic en 'Solicitar Préstamo Directo'."
+
         # Respuesta por defecto
         return "Lo siento, no entendí bien tu consulta. Puedes preguntarme por libros disponibles o tus préstamos."
 
