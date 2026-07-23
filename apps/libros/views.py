@@ -64,9 +64,15 @@ class LibroDetailView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         usuario = self.request.user
+        if usuario.is_superuser or getattr(usuario, 'rol', None) == 'bibliotecario':
+            return Libro.objects.all()
+            
         queryset = Libro.objects.all()
         if usuario.rol == 'estudiante':
             queryset = queryset.filter(Q(grado_objetivo=usuario.grado_escolar) | Q(grado_objetivo='general'))
+        elif usuario.rol == 'docente' and usuario.grado_escolar != 'ninguno':
+            queryset = queryset.filter(Q(grado_objetivo=usuario.grado_escolar) | Q(grado_objetivo='general'))
+            
         return queryset
 
     def get_context_data(self, **kwargs):
