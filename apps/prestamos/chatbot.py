@@ -23,7 +23,7 @@ class BibliotecaChatbot:
         return "Lo siento, no entendí bien tu consulta. Puedes preguntarme por libros disponibles o tus préstamos."
 
     def _consultar_libros(self):
-        libros = Libro.objects.filter(estado__iexact='Disponible')[:3]
+        libros = Libro.objects.filter(ejemplares_disponibles__gt=0)[:3]
         if libros.exists():
             nombres = ", ".join([f"'{l.titulo}' de {l.autor}" for l in libros])
             return f"¡Sí! Tenemos estos libros disponibles: {nombres}. ¿Deseas solicitar alguno?"
@@ -33,7 +33,7 @@ class BibliotecaChatbot:
         if not self.usuario or not self.usuario.is_authenticated:
             return "Debes iniciar sesión para que pueda revisar tus préstamos personales."
         
-        prestamos_activos = Prestamo.objects.filter(usuario=self.usuario, estado='Activo')
+        prestamos_activos = Prestamo.objects.filter(usuario=self.usuario, estado='activo')
         if prestamos_activos.exists():
             return f"Tienes {prestamos_activos.count()} préstamo(s) activo(s) en curso."
         return "No tienes préstamos activos en este momento."
