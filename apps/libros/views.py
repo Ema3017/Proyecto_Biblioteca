@@ -12,6 +12,11 @@ class BibliotecarioRequiredMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser or self.request.user.rol == 'bibliotecario'
 
+class DocenteOrBibliotecarioRequiredMixin(UserPassesTestMixin):
+    """Mixin para restringir el acceso a vistas a bibliotecarios, superusuarios o docentes."""
+    def test_func(self):
+        return self.request.user.is_superuser or self.request.user.rol in ['bibliotecario', 'docente']
+
 class CatalogoView(LoginRequiredMixin, ListView):
     """
     Vista principal del catálogo de libros.
@@ -79,7 +84,7 @@ class LibroDetailView(LoginRequiredMixin, DetailView):
         context['recomendados'] = recomendados
         return context
 
-class LibroCreateView(LoginRequiredMixin, BibliotecarioRequiredMixin, CreateView):
+class LibroCreateView(LoginRequiredMixin, DocenteOrBibliotecarioRequiredMixin, CreateView):
     """Formulario para registrar un nuevo libro en el catálogo."""
     model = Libro
     form_class = LibroForm

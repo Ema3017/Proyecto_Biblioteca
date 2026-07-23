@@ -32,16 +32,20 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <!-- Dashboard único -->
+                    {% if user.rol == 'bibliotecario' or user.is_superuser %}
                     <li class="nav-item">
                         <a class="nav-link text-white-50" href="{% url 'prestamos:dashboard' %}">Dashboard</a>
                     </li>
+                    {% endif %}
 
                     <!-- Menú desplegable: Libros -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white-50" href="#" data-bs-toggle="dropdown">Libros</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="{% url 'libros:catalogo' %}">Ver Catálogo</a></li>
+                            {% if user.rol == 'bibliotecario' or user.rol == 'docente' or user.is_superuser %}
                             <li><a class="dropdown-item" href="{% url 'libros:crear' %}">Registrar Nuevo</a></li>
+                            {% endif %}
                         </ul>
                     </li>
 
@@ -50,15 +54,18 @@
                         <a class="nav-link dropdown-toggle text-white-50" href="#"
                             data-bs-toggle="dropdown">Préstamos</a>
                         <ul class="dropdown-menu">
+                            {% if user.rol == 'bibliotecario' or user.is_superuser %}
                             <li><a class="dropdown-item" href="{% url 'prestamos:gestion_prestamos' %}">Gestión
                                     Administrativa</a>
                             </li>
+                            {% endif %}
                             <li><a class="dropdown-item" href="{% url 'prestamos:mis_prestamos' %}">Mis Préstamos</a>
                             </li>
                         </ul>
                     </li>
 
                     <!-- Menú desplegable: Usuarios -->
+                    {% if user.rol == 'bibliotecario' or user.is_superuser %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white-50" href="#"
                             data-bs-toggle="dropdown">Usuarios</a>
@@ -66,6 +73,7 @@
                             <li><a class="dropdown-item" href="{% url 'usuarios:lista' %}">Lista de Usuarios</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                 </ul>
 
                 <!-- Lógica del botón Entrar/Salir -->
