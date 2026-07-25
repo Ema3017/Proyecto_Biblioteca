@@ -1,3 +1,8 @@
+# =====================================================================
+# Programación - models.py
+# Autoras: Coa Palo Jhadira Jazmín / Quispe Laura, Amarilis
+# =====================================================================
+
 from django.db import models
 
 class Libro(models.Model):

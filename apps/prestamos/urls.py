@@ -1,3 +1,8 @@
+# =====================================================================
+# Programación - urls.py
+# Autoras: Coa Palo Jhadira Jazmín / Quispe Laura, Amarilis
+# =====================================================================
+
 from django.urls import path
 from . import views
 from .views import procesar_mensaje_chat

@@ -1,3 +1,8 @@
+# =====================================================================
+# Programación - forms.py
+# Autoras: Coa Palo Jhadira Jazmín / Quispe Laura, Amarilis
+# =====================================================================
+
 from django import forms
 from .models import Libro
 

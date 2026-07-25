@@ -1,3 +1,8 @@
+# =====================================================================
+# Programación - decorators.py
+# Autoras: Coa Palo Jhadira Jazmín / Quispe Laura, Amarilis
+# =====================================================================
+
 from django.core.exceptions import PermissionDenied
 from functools import wraps
 

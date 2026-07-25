@@ -1,3 +1,8 @@
+# =====================================================================
+# Programación - chatbot.py
+# Autoras: Coa Palo Jhadira Jazmín / Quispe Laura, Amarilis
+# =====================================================================
+
 from .models import Libro, Prestamo
 
 class BibliotecaChatbot:

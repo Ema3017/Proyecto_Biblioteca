@@ -1,3 +1,8 @@
+# =====================================================================
+# Programación - engine.py
+# Autoras: Coa Palo Jhadira Jazmín / Quispe Laura, Amarilis
+# =====================================================================
+
 import os
 from django.conf import settings
 

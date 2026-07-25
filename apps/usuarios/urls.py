@@ -1,3 +1,8 @@
+# =====================================================================
+# Programación - urls.py
+# Autoras: Coa Palo Jhadira Jazmín / Quispe Laura, Amarilis
+# =====================================================================
+
 from django.urls import path
 from django.contrib.auth import views as auth_views
 from . import views

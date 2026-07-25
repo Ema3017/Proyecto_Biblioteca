@@ -1,3 +1,8 @@
+# =====================================================================
+# Programación - forms.py
+# Autoras: Coa Palo Jhadira Jazmín / Quispe Laura, Amarilis
+# =====================================================================
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import Usuario
