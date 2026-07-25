@@ -199,7 +199,10 @@ def exportar_excel_prestamos(request):
     # Escribir los datos
     prestamos = list(Prestamo.objects.all().order_by('-fecha_prestamo')) # Convertimos a lista para aplicar funciones de Python
     
-    # --- APLICACIÓN DE PROGRAMACIÓN FUNCIONAL (Requisito del Docente) ---
+    # =====================================================================
+    # PROGRAMACIÓN FUNCIONAL - REQUISITO DEL CURSO
+    # Autoras: Coa Palo Jhadira Jazmín / Quispe Laura, Amarilis
+    # =====================================================================
     # 1. Función anónima lambda y filter() para obtener objetos con atrasos
     prestamos_atrasados = list(filter(lambda p: p.estado == 'atrasado', prestamos))
     
@@ -208,7 +211,7 @@ def exportar_excel_prestamos(request):
     
     # Imprimimos en consola para demostrar que la lógica funcional está operando
     print(f"Alerta Funcional: Hay {len(prestamos_atrasados)} atrasados. Correos: {correos_sancionados}")
-    # ---------------------------------------------------------------------
+    # =====================================================================
 
     for p in prestamos:
         ws.append([
