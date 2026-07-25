@@ -197,7 +197,19 @@ def exportar_excel_prestamos(request):
     ws.append(columnas)
     
     # Escribir los datos
-    prestamos = Prestamo.objects.all().order_by('-fecha_prestamo')
+    prestamos = list(Prestamo.objects.all().order_by('-fecha_prestamo')) # Convertimos a lista para aplicar funciones de Python
+    
+    # --- APLICACIÓN DE PROGRAMACIÓN FUNCIONAL (Requisito del Docente) ---
+    # 1. Función anónima lambda y filter() para obtener objetos con atrasos
+    prestamos_atrasados = list(filter(lambda p: p.estado == 'atrasado', prestamos))
+    
+    # 2. Función anónima lambda y map() para extraer solo los correos de los usuarios atrasados
+    correos_sancionados = list(map(lambda p: p.usuario.email if p.usuario.email else 'Sin correo', prestamos_atrasados))
+    
+    # Imprimimos en consola para demostrar que la lógica funcional está operando
+    print(f"Alerta Funcional: Hay {len(prestamos_atrasados)} atrasados. Correos: {correos_sancionados}")
+    # ---------------------------------------------------------------------
+
     for p in prestamos:
         ws.append([
             p.usuario.username,
